@@ -397,33 +397,6 @@ router.put("/:boardId/lists/:listId/tasks/:taskId", async (req, res, next) => {
   }
 });
 
-// PUT "/api/boards/:boardId/lists/:listId/tasks/reorder => Reorder tasks within a list
-router.put(
-  "/boards/:boardId/lists/:listId/tasks/reorder",
-  async (req, res, next) => {
-    const { listId } = req.params;
-    const { sourceIndex, destinationIndex } = req.body;
-
-    try {
-      const tasks = await Task.find({ list: listId });
-      const reorderedTasks = Array.from(tasks);
-      const [removedTask] = reorderedTasks.splice(sourceIndex, 1);
-      reorderedTasks.splice(destinationIndex, 0, removedTask);
-
-      for (let i = 0; i < reorderedTasks.length; i++) {
-        await Task.findByIdAndUpdate(reorderedTasks[i]._id, {
-          $set: { order: i },
-        });
-      }
-
-      res.status(200).json("Tasks reordered successfully");
-    } catch (error) {
-      console.log("Error reordering tasks:", error);
-      next(error);
-    }
-  }
-);
-
 // DELETE "/api/boards/:boardId/lists/:listId/tasks/:taskId => To delete an existing task
 router.delete(
   "/:boardId/lists/:listId/tasks/:taskId",
