@@ -28,6 +28,12 @@ module.exports = (app) => {
     })
   );
 
+  // Agrega el encabezado Access-Control-Allow-Origin manualmente a las respuestas
+  app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", FRONTEND_URL);
+    next();
+  });
+
   // In development environment the app logs
   app.use(logger("dev"));
 
